@@ -5,9 +5,9 @@ import os
 class c_space_changer(object):
     """Functions for playing with image colourspace."""
 
-    def __init__(self, path):
+    def __init__(self, dims):
         """Initialize c_space changer with the base directory of image data."""
-        self.path = path
+        self.dims = dims
 
     def space_change(self, img, src_space, target_space):
         """
@@ -23,7 +23,6 @@ class c_space_changer(object):
         """
         # Concatanate parameter to be passed into cvtColor
         param = src_space+"2"+target_space
-        print(param)
         keyword_dict = {
             "BGR2RGB": cv.COLOR_BGR2RGB,
             "BGR2HSV": cv.COLOR_BGR2HSV,
@@ -31,14 +30,14 @@ class c_space_changer(object):
         }
 
         # Convert the color using the above dict and return the same
-        print(keyword_dict[param])
         img_corrected = cv.cvtColor(img, keyword_dict[param])
-
+        print("Currently printing ")
         return img_corrected
 
 
 if __name__ == "__main__":
 
+    # To test if the functions above produce expected outputs
     base_dir = "..\Data"
     img = cv.imread(os.path.join(base_dir, 'lena.jpg'))
     chng = c_space_changer(base_dir)
@@ -46,7 +45,4 @@ if __name__ == "__main__":
     c_img = chng.space_change(img, "BGR", "RGB")
     cv.imshow('frame', c_img)
 
-    # Close image if 'q' is pressed
-    k = cv.waitKey(5) & 0xFF
-    if k == 27:
-        cv.destroyAllWindows()
+    cv.waitKey()
