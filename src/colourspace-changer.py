@@ -1,5 +1,7 @@
 import cv2 as cv
 import os
+import getopt
+import sys
 
 
 class c_space_changer(object):
@@ -31,18 +33,35 @@ class c_space_changer(object):
 
         # Convert the color using the above dict and return the same
         img_corrected = cv.cvtColor(img, keyword_dict[param])
-        print("Currently printing ")
         return img_corrected
 
 
 if __name__ == "__main__":
 
-    # To test if the functions above produce expected outputs
-    base_dir = "..\Data"
-    img = cv.imread(os.path.join(base_dir, 'lena.jpg'))
-    chng = c_space_changer(base_dir)
+    # Store argument list from user
+    argument_list = sys.argv[1:]
 
-    c_img = chng.space_change(img, "BGR", "RGB")
-    cv.imshow('frame', c_img)
+    # List of options and their long versions
+    options = 'ht:'
+    long_options = ['help', 'test', 'Output =']
 
-    cv.waitKey()
+    # Parse arguments and handle any exceptions'
+    try:
+        arguments, values = getopt.getopt(argument_list, options, long_options)
+        for current_arg, current_val in arguments:
+
+            if current_arg in ('-h', '--help'):
+                print(c_space_changer.__doc__)
+
+            elif current_arg in ('-t', '--test'):
+                # To test if the functions above produce expected outputs
+                base_dir = "..\Data"
+                img = cv.imread(os.path.join(base_dir, 'lena.jpg'))
+                chng = c_space_changer(base_dir)
+                c_img = chng.space_change(img, "BGR", "RGB")
+                cv.imshow('frame', c_img)
+                cv.waitKey()
+
+    except getopt.error as err:
+        # output error, and return with an error code
+        print(err)
