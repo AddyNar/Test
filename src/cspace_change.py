@@ -4,7 +4,7 @@ import getopt
 import sys
 
 
-class c_space_changer(object):
+class ColourSpaceChanger(object):
     """Functions for playing with image colourspace."""
 
     def __init__(self, dims):
@@ -51,13 +51,13 @@ if __name__ == "__main__":
         for current_arg, current_val in arguments:
 
             if current_arg in ('-h', '--help'):
-                print(c_space_changer.__doc__)
+                print(ColourSpaceChanger.__doc__)
 
             elif current_arg in ('-t', '--test'):
                 # To test if the functions above produce expected outputs
                 base_dir = "..\Data"
                 img = cv.imread(os.path.join(base_dir, 'lena.jpg'))
-                chng = c_space_changer(base_dir)
+                chng = ColourSpaceChanger(base_dir)
                 c_img = chng.space_change(img, "BGR", "RGB")
                 cv.imshow('frame', c_img)
                 cv.waitKey()
