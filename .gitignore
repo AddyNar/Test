@@ -1,2 +1,3 @@
 .jpg
 /Data/*
+/src/__pycache__/*
