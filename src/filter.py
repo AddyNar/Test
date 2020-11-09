@@ -23,8 +23,11 @@ class linearFilter(object):
         # A computer the overall magnitude and angle pixel-wise
         img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-        # Blur to remove noise in the image
-        # img = cv.G
+        # Normalize and Blur the image to remove noise
+        img = img/255.0
+        img = cv.GaussianBlur(img, (3, 3), 0)
+
+        # Computer the image gradients along x,y and overall
         sobelx = cv.Sobel(img, format, 1, 0, k_size)
         sobely = cv.Sobel(img, format, 0, 1, k_size)
         sobel_mag = np.sqrt(np.square(sobelx)+np.square(sobely))
@@ -40,25 +43,30 @@ class linearFilter(object):
         return grad[axis]
 
 
-def sobel_test(fname):
-    """
-    Test whether everything is okay with the sobel funcition
-    """
+def sobel_test(args):
+    """Test whether everything is okay with the sobel funcition."""
     base_dir = "../Data"
 
-    #Define the params to test the function
-
+    # Define the params to test the function
+    params = {
+        'format': cv.CV_64F,
+        'k_size': 3,
+        'axis': 'y'
+    }
     # Read the image and blur to remove noise
-    img = cv.imread(os.path.join(base_dir, "Lena.jpg"))
-    img = cv.GaussianBlur(img, (3,3), 0)
+    img = cv.imread(os.path.join(base_dir, 'Lena.jpg'))
 
     # Call an instance of sobel class
     filt = linearFilter()
-    grad, dir = filt.sobel(img, cv.CV_16S, axis='default', k_size=3)
+    grad, dir = filt.sobel(img, **params)
     print(np.unique(grad))
     cv.imshow('frame', grad)
     cv.waitKey()
 # To test if the class above is functional
 if __name__ == "__main__":
     args = sys.argv[1:]
-    sobel_test()
+
+    checks = {
+        sobel_test(args): "Everything"
+    }
+    sobel_test(args)
